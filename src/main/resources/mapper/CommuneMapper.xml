@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cl.bennu.controljornadabackend.mapper.CommuneMapper">
+
+    <resultMap id="CommuneResultMap"
+               type="cl.bennu.controljornadabackend.model.Commune">
+        <id property="id" column="id"/>
+        <result property="cityId" column="city_id"/>
+        <result property="name" column="name"/>
+        <result property="siiCode" column="sii_code"/>
+        <result property="tgrCode" column="tgr_code"/>
+    </resultMap>
+
+    <sql id="CommuneColumns">
+        id, city_id, name, sii_code, tgr_code
+    </sql>
+
+    <select id="listar" resultMap="CommuneResultMap">
+        SELECT
+            <include refid="CommuneColumns"/>
+        FROM commune
+        ORDER BY id
+    </select>
+
+    <select id="encontrarPorId"
+            parameterType="java.lang.Integer"
+            resultMap="CommuneResultMap">
+        SELECT
+            <include refid="CommuneColumns"/>
+        FROM commune
+        WHERE id = #{id}
+    </select>
+
+    <insert id="crear"
+            parameterType="cl.bennu.controljornadabackend.model.Commune">
+        INSERT INTO commune (
+            id,
+            city_id,
+            name,
+            sii_code,
+            tgr_code
+        )
+        VALUES (
+            #{id},
+            #{cityId},
+            #{name},
+            #{siiCode},
+            #{tgrCode}
+        )
+    </insert>
+
+
+    <update id="actualizar"
+            parameterType="cl.bennu.controljornadabackend.model.Commune">
+        UPDATE commune
+        SET
+            city_id = #{cityId},
+            name = #{name},
+            sii_code = #{siiCode},
+            tgr_code = #{tgrCode}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="eliminar"
+            parameterType="java.lang.Integer">
+        DELETE FROM commune
+        WHERE id = #{id}
+    </delete>
+
+</mapper>

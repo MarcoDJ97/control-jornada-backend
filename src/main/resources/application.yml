@@ -9,10 +9,10 @@ spring:
   main:
     banner-mode: log
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:template-db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;INIT=RUNSCRIPT FROM 'classpath:db/schema.sql'
-    username: h2
-    password:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5433/mi_base_datos
+    username: marco
+    password: Marco12345
 
 mybatis:
   config-location: classpath:mybatis-config.xml
@@ -24,7 +24,7 @@ logging:
 
 management:
   endpoints:
-    web:
+    web:  
       base-path: /v1/template/health/
       exposure:
         include: "health,info,prometheus"
