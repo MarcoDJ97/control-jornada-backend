@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cl.bennu.controljornadabackend.mapper.RegisterMapper">
+
+    <resultMap id="RegisterResultMap"
+               type="cl.bennu.controljornadabackend.model.Register">
+        <id property="registersId" column="id"/>
+        <result property="employeeId" column="employee_id"/>
+        <result property="startOfTheDay" column="start_of_the_day"/>
+        <result property="entry" column="entry"/>
+        <result property="exit" column="exit"/>
+        <result property="breakTime" column="break_time"/>
+        <result property="backToWork" column="back_to_work"/>
+        <result property="day" column="day"/>
+        <result property="justificationId" column="justification_id"/>
+    </resultMap>
+
+    <sql id="ColumnasRegister">
+        id,
+        employee_id,
+        start_of_the_day,
+        entry,
+        exit,
+        break_time,
+        back_to_work,
+        day,
+        justification_id
+    </sql>
+
+
+    <select id="listar" resultMap="RegisterResultMap">
+        SELECT
+        <include refid="ColumnasRegister"/>
+        FROM register
+        ORDER BY id
+    </select>
+
+
+    <select id="encontrarPorId"
+            parameterType="int"
+            resultMap="RegisterResultMap">
+        SELECT
+        <include refid="ColumnasRegister"/>
+        FROM register
+        WHERE id = #{id}
+    </select>
+
+
+    <insert id="crear"
+            parameterType="cl.bennu.controljornadabackend.model.Register"
+            useGeneratedKeys="true"
+            keyProperty="registersId"
+            keyColumn="id">
+        INSERT INTO register (
+        employee_id,
+        start_of_the_day,
+        entry,
+        exit,
+        break_time,
+        back_to_work,
+        day,
+        justification_id
+        )
+        VALUES (
+        #{employeeId},
+        #{startOfTheDay},
+        #{entry},
+        #{exit},
+        #{breakTime},
+        #{backToWork},
+        #{day},
+        #{justificationId}
+        )
+    </insert>
+
+
+    <update id="actualizar"
+            parameterType="cl.bennu.controljornadabackend.model.Register">
+        UPDATE register
+        SET
+        employee_id = #{employeeId},
+        start_of_the_day = #{startOfTheDay},
+        entry = #{entry},
+        exit = #{exit},
+        break_time = #{breakTime},
+        back_to_work = #{backToWork},
+        day = #{day},
+        justification_id = #{justificationId}
+        WHERE id = #{registersId}
+    </update>
+
+    <delete id="eliminar" parameterType="int">
+        DELETE FROM register
+        WHERE id = #{id}
+    </delete>
+
+</mapper>
