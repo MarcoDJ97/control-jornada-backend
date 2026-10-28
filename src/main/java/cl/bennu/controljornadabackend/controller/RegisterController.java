@@ -1,15 +1,24 @@
 
 package cl.bennu.controljornadabackend.controller;
 
+import cl.bennu.controljornadabackend.constants.Constants;
+import cl.bennu.controljornadabackend.controller.base.BaseController;
 import cl.bennu.controljornadabackend.model.Register;
 import cl.bennu.controljornadabackend.service.RegisterService;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/registers")
-public class RegisterController {
+@RequestMapping(
+        path = Constants.BASE_API,
+        produces = MediaType.APPLICATION_JSON_VALUE
+)
+public class RegisterController extends BaseController {
+
+    private static final String ENDPOINT = "/registers";
 
     private final RegisterService registerService;
 
@@ -17,30 +26,39 @@ public class RegisterController {
         this.registerService = registerService;
     }
 
-    @GetMapping
-    public List<Register> listar() {
-        return registerService.listar();
+    @GetMapping(ENDPOINT)
+    public ResponseEntity<?> getAll() {
+        List<Register> registers = registerService.listar();
+        return ok(registers);
     }
 
-    @GetMapping("/{id}")
-    public Register encontrarPorId(@PathVariable Integer id) {
-        return registerService.encontrarPorId(id);
+    @GetMapping(ENDPOINT + "/{id}")
+    public ResponseEntity<?> getById(@PathVariable Long id) {
+        return ok(registerService.encontrarPorId(id));
     }
 
-    @PostMapping
-    public Register crear(@RequestBody Register register) {
-        return registerService.crear(register);
+    @PostMapping(
+            path = ENDPOINT,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<?> save(@RequestBody Register register) {
+        return ok(registerService.crear(register));
     }
 
-    @PutMapping("/{id}")
-    public Register actualizar(
-            @PathVariable Integer id,
-            @RequestBody Register register) {
-        return registerService.actualizar(id, register);
+    @PutMapping(
+            path = ENDPOINT + "/{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<?> update(
+            @PathVariable Long id,
+            @RequestBody Register register
+    ) {
+        return ok(registerService.actualizar(id, register));
     }
 
-    @DeleteMapping("/{id}")
-    public void eliminar(@PathVariable Integer id) {
+    @DeleteMapping(ENDPOINT + "/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         registerService.eliminar(id);
+        return ok();
     }
 }

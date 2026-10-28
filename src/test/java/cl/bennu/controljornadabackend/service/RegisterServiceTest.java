@@ -16,7 +16,6 @@ import java.time.LocalTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,7 +32,7 @@ class RegisterServiceTest {
     @BeforeEach
     void setUp() {
         register = new Register();
-        register.setRegistersId(1);
+        register.setId(1L);
         register.setEmployeeId(10);
         register.setStartOfTheDay(LocalTime.of(8, 0));
         register.setEntry(LocalTime.of(8, 30));
@@ -46,80 +45,84 @@ class RegisterServiceTest {
 
     @Test
     void listarDebeDevolverTodosLosRegistros() {
-        when(registerMapper.listar()).thenReturn(List.of(register));
+        when(registerMapper.getAll()).thenReturn(List.of(register));
 
         List<Register> resultado = registerService.listar();
 
         assertEquals(1, resultado.size());
-        assertEquals(1, resultado.get(0).getRegistersId());
-        verify(registerMapper).listar();
+        assertEquals(1L, resultado.get(0).getId());
+        verify(registerMapper).getAll();
     }
 
     @Test
     void encontrarPorIdDebeDevolverElRegistroExistente() {
-        when(registerMapper.encontrarPorId(1)).thenReturn(register);
+        when(registerMapper.get(1L)).thenReturn(register);
 
-        Register resultado = registerService.encontrarPorId(1);
+        Register resultado = registerService.encontrarPorId(1L);
 
         assertNotNull(resultado);
-        assertEquals(1, resultado.getRegistersId());
+        assertEquals(1L, resultado.getId());
         assertEquals(10, resultado.getEmployeeId());
-        verify(registerMapper).encontrarPorId(1);
+        verify(registerMapper).get(1L);
     }
 
-    
-        @Test
-        void crearDebeGuardarElRegistro() {
-            registerService.crear(register);
+    @Test
+    void crearDebeGuardarElRegistro() {
+        when(registerMapper.get(1L)).thenReturn(register);
 
-            verify(registerMapper).crear(register);
-        }
+        Register resultado = registerService.crear(register);
+
+        assertNotNull(resultado);
+        assertEquals(1L, resultado.getId());
+
+        verify(registerMapper).insert(register);
+        verify(registerMapper).get(1L);
+    }
 
     @Test
     void actualizarDebeActualizarElRegistroExistente() {
-        when(registerMapper.encontrarPorId(1)).thenReturn(register);
+        when(registerMapper.get(1L)).thenReturn(register);
 
-        Register resultado = registerService.actualizar(1, register);
+        Register resultado = registerService.actualizar(1L, register);
 
         assertNotNull(resultado);
-        assertEquals(1, resultado.getRegistersId());
+        assertEquals(1L, resultado.getId());
 
-        verify(registerMapper, times(2)).encontrarPorId(1);
-        verify(registerMapper).actualizar(register);
+        verify(registerMapper, times(2)).get(1L);
+        verify(registerMapper).update(register);
     }
 
-        @Test
-        void eliminarDebeEliminarElRegistroExistente() {
-            when(registerMapper.encontrarPorId(1)).thenReturn(register);
+    @Test
+    void eliminarDebeEliminarElRegistroExistente() {
+        when(registerMapper.get(1L)).thenReturn(register);
 
-            registerService.eliminar(1);
+        registerService.eliminar(1L);
 
-            verify(registerMapper).encontrarPorId(1);
-            verify(registerMapper).eliminar(1);
-        }
-
+        verify(registerMapper).get(1L);
+        verify(registerMapper).delete(1L);
+    }
 
     @Test
     void actualizarDebeFallarSiElRegistroNoExiste() {
-        when(registerMapper.encontrarPorId(99)).thenReturn(null);
+        when(registerMapper.get(99L)).thenReturn(null);
 
         assertThrows(
                 ResponseStatusException.class,
-                () -> registerService.actualizar(99, register)
+                () -> registerService.actualizar(99L, register)
         );
 
-        verify(registerMapper, never()).actualizar(any(Register.class));
+        verify(registerMapper, never()).update(any(Register.class));
     }
 
     @Test
     void eliminarDebeFallarSiElRegistroNoExiste() {
-        when(registerMapper.encontrarPorId(99)).thenReturn(null);
+        when(registerMapper.get(99L)).thenReturn(null);
 
         assertThrows(
                 ResponseStatusException.class,
-                () -> registerService.eliminar(99)
+                () -> registerService.eliminar(99L)
         );
 
-        verify(registerMapper, never()).eliminar(99);
+        verify(registerMapper, never()).delete(99L);
     }
 }

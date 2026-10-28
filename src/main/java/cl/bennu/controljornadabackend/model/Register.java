@@ -1,18 +1,20 @@
 
 package cl.bennu.controljornadabackend.model;
 
+import cl.bennu.commons.domain.base.BaseDomain;
 import lombok.Data;
-import lombok.Getter;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Data 
-public class Register {
+@EqualsAndHashCode(callSuper = true)
+@Data
+@NoArgsConstructor
+public class Register extends BaseDomain implements Serializable {
 
-    private Integer registersId;
     private Integer employeeId;
     private LocalTime startOfTheDay;
     private LocalTime entry;

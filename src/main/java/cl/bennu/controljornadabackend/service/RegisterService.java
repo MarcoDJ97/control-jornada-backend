@@ -21,16 +21,16 @@ public class RegisterService {
     }
 
     public List<Register> listar() {
-        return registerMapper.listar();
+        return registerMapper.getAll();
     }
 
-    public Register encontrarPorId(Integer id) {
-        Register register = registerMapper.encontrarPorId(id);
+    public Register encontrarPorId(Long id) {
+        Register register = registerMapper.get(id);
 
         if (register == null) {
             throw new ResponseStatusException(
-                NOT_FOUND,
-                "No existe un registro con ID " + id
+                    NOT_FOUND,
+                    "No existe un registro con ID " + id
             );
         }
 
@@ -39,24 +39,23 @@ public class RegisterService {
 
     @Transactional
     public Register crear(Register register) {
-        registerMapper.crear(register);
-
-        return registerMapper.encontrarPorId(register.getRegistersId());
+        registerMapper.insert(register);
+        return encontrarPorId(register.getId());
     }
 
     @Transactional
-    public Register actualizar(Integer id, Register data) {
+    public Register actualizar(Long id, Register data) {
         encontrarPorId(id);
 
-        data.setRegistersId(id);
-        registerMapper.actualizar(data);
+        data.setId(id);
+        registerMapper.update(data);
 
-        return registerMapper.encontrarPorId(id);
+        return encontrarPorId(id);
     }
 
     @Transactional
-    public void eliminar(Integer id) {
+    public void eliminar(Long id) {
         encontrarPorId(id);
-        registerMapper.eliminar(id);
+        registerMapper.delete(id);
     }
 }
