@@ -13,7 +13,7 @@ spring:
     driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME:org.postgresql.Driver}
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5433/mi_base_datos}
     username: ${SPRING_DATASOURCE_USERNAME:${DB_USERNAME:postgres}}
-    password: ${SPRING_DATASOURCE_PASSWORD:${DB_PASSWORD}}
+    password: ${SPRING_DATASOURCE_PASSWORD:${DB_PASSWORD:}}
 mybatis:
   config-location: classpath:mybatis-config.xml
   mapper-locations: classpath:/mapper/**/*.xml
